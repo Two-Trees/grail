@@ -1,10 +1,16 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const bodyParser = require('body-parser')
+// const schema = require('./schema/schema')
+// const { graphqlHTTP } = require('express-graphql')
+
 const app = express()
+app.use(cors())
 
 // Middleware to parse the body of incoming requests as JSON
 app.use(express.json());
+app.use(bodyParser.json())
 
 mongoose.connect('mongodb+srv://Two-Trees:vorplesword@cluster0.g2rte.mongodb.net/grail-db?retryWrites=true&w=majority'), {
     useNewUrlParser: true,
@@ -20,14 +26,8 @@ const cardSchema = new mongoose.Schema({
     description: String,
   });
   
-  // Create a model for the "cards" collection
+// Create a model for the "cards" collection
 const Card = mongoose.model('Card', cardSchema);
-
-// Router to handle incoming requests
-// const router = express.Router();
-// app.use('/', router)
-
-app.use(cors())
 
 app.get('/', async (req, res) => {
     try {
@@ -38,6 +38,29 @@ app.get('/', async (req, res) => {
     }
   });
 
+app.post('/api/cards', (req, res) => {
+  const { title, description } = req.body
+  const newCard = new Card({ title, description })
+  newCard.save()
+  res.status(201).send("New Card Saved")
+});
+
+app.delete('/api/cards/:title', (req, res) => {
+  const titleToDelete = req.params.title;
+  Card.findOneAndDelete({ title: titleToDelete })
+  console.log("pinged delete route in index.js")
+});
+
 app.listen(4000, ()=> {
     console.log('listening for requests on port 4000')
 })
+
+
+// Router to handle incoming requests
+// const router = express.Router();
+// app.use('/', router)
+
+// app.use('/graphql', graphqlHTTP({
+//   schema,
+//   graphiql: true
+// }));
