@@ -20,15 +20,6 @@ mongoose.connection.once('open', () => {
     console.log('conneted to mongodb');
 });
 
-// Create a schema for the card data
-const cardSchema = new mongoose.Schema({
-    title: String,
-    description: String,
-  });
-  
-// Create a model for the "cards" collection
-const Card = mongoose.model('Card', cardSchema);
-
 app.get('/', async (req, res) => {
     try {
       const cards = await Card.find();
@@ -51,8 +42,27 @@ app.delete('/api/cards/:title', (req, res) => {
   console.log("pinged delete route in index.js")
 });
 
+
+// Create a schema for the card data
+const cardSchema = new mongoose.Schema({
+    _id: String,
+    title: String,
+    description: String,
+  });
+  
+// Create a model for the "cards" collection
+const Card = mongoose.model('Card', cardSchema);
+
+// app.use(
+//   '/graphql',
+//   graphqlHTTP({
+//     schema,
+//     graphiql: true,
+//   })
+// );
+
 app.listen(4000, ()=> {
-    console.log('listening for requests on port 4000')
+  console.log('listening for requests on port 4000')
 })
 
 

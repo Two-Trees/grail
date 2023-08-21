@@ -1,0 +1,9 @@
+type Card {
+  _id: String!
+  title: String!
+  description: String!
+}
+
+type Query {
+  cards: [Card]
+}
